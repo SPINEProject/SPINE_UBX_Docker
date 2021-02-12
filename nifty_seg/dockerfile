@@ -1,0 +1,34 @@
+# Use ubuntu xenial as a parent image
+FROM ubuntu:xenial
+
+RUN apt-get update
+
+RUN apt-get install curl -y
+
+RUN apt-get install make gcc g++ libx11-dev libxt-dev libgl1-mesa-dev libglu1-mesa-dev libfontconfig-dev libxrender-dev libncurses5-dev -y
+
+#RUN apt-get update && apt-get -y install cmake protobuf-compiler
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install wget unzip xorg cmake
+
+
+RUN apt-get install libgstreamer-plugins-base0.10-dev -y
+
+RUN apt install -y git
+
+
+# Add Nifty Seg
+WORKDIR /src
+RUN git clone https://github.com/KCL-BMEIS/NiftySeg.git niftyseg
+RUN mkdir niftyseg_build 
+RUN mkdir /niftyseg_atlas
+WORKDIR niftyseg_build
+RUN cmake ../niftyseg -DINSTALL_PRIORS="TRUE" -DINSTALL_NIFTYREG="TRUE" -DINSTALL_PRIORS_DIRECTORY="/niftyseg_atlas" 
+RUN make 
+RUN make install
+
+
+
+WORKDIR /
+
+

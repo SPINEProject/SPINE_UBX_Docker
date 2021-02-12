@@ -24,9 +24,6 @@ RUN apt-get install libgstreamer-plugins-base0.10-dev -y
 
 RUN apt install -y git
 
-# add src (it contains dcm2niix if needed)
-ADD ./src /src
-
 # Matlab runtime AND SP12
 # Install MATLAB MCR in /opt/mcr/
 ENV MATLAB_VERSION R2019b
@@ -53,46 +50,6 @@ RUN wget --no-check-certificate --progress=bar:force -P /opt https://www.fil.ion
  && rm -f /opt/spm${SPM_VERSION}_${SPM_REVISION}_Linux_${MATLAB_VERSION}.zip \
  && /opt/spm${SPM_VERSION}/spm${SPM_VERSION} function exit \
  && chmod +x /opt/spm${SPM_VERSION}/spm${SPM_VERSION}
-
-# Add ANTS
-WORKDIR /src
-RUN mkdir ants
-WORKDIR ants
-RUN git clone https://github.com/ANTsX/ANTs.git
-RUN mkdir build install
-WORKDIR build
-RUN cmake \
-    ../ANTs -DCMAKE_INSTALL_PREFIX=/src/ants/install
-RUN make
-WORKDIR ANTS-build
-RUN make install 
-
-# Add Nifty Seg
-WORKDIR /src
-RUN git clone https://github.com/KCL-BMEIS/NiftySeg.git niftyseg
-RUN mkdir niftyseg_build 
-RUN mkdir /niftyseg_atlas
-WORKDIR niftyseg_build
-RUN cmake ../niftyseg -DINSTALL_PRIORS="TRUE" -DINSTALL_NIFTYREG="TRUE" -DINSTALL_PRIORS_DIRECTORY="/niftyseg_atlas" 
-RUN make 
-RUN make install
-
-# FSL 
-RUN apt update && apt install -y wget python
-
-#install fsl, but get rid of src 
-RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && python fslinstaller.py -d /usr/local/fsl -V 6.0.4 && rm -rf /usr/local/fsl/src
-
-ENV FSLDIR=/usr/local/fsl
-ENV PATH=$PATH:$FSLDIR/bin
-ENV LD_LIBRARY_PATH=$FSLDIR/lib
-ENV FSLOUTPUTTYPE=NIFTI_GZ
-
-#fsl needs numpy
-RUN apt install -y vim jq python-numpy
-
-
-
 
 WORKDIR /
 

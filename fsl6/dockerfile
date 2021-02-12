@@ -1,0 +1,44 @@
+# Use ubuntu xenial as a parent image
+FROM ubuntu:xenial
+
+RUN apt-get update
+
+RUN apt-get install curl -y
+
+RUN apt-get install make gcc g++ libx11-dev libxt-dev libgl1-mesa-dev libglu1-mesa-dev libfontconfig-dev libxrender-dev libncurses5-dev -y
+
+#RUN apt-get update && apt-get -y install cmake protobuf-compiler
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install wget unzip xorg
+# Install cake
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.sh \
+      -q -O /tmp/cmake-install.sh \
+      && chmod u+x /tmp/cmake-install.sh \
+      && mkdir /usr/bin/cmake \
+      && /tmp/cmake-install.sh --skip-license --prefix=/usr/bin/cmake \
+      && rm /tmp/cmake-install.sh
+
+ENV PATH="/usr/bin/cmake/bin:${PATH}"
+
+RUN apt-get install libgstreamer-plugins-base0.10-dev -y
+
+RUN apt install -y git
+
+# FSL 
+RUN apt update && apt install -y wget python
+
+#install fsl, but get rid of src 
+RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && python fslinstaller.py -d /usr/local/fsl -V 6.0.4 && rm -rf /usr/local/fsl/src
+
+ENV FSLDIR=/usr/local/fsl
+ENV PATH=$PATH:$FSLDIR/bin
+ENV LD_LIBRARY_PATH=$FSLDIR/lib
+ENV FSLOUTPUTTYPE=NIFTI_GZ
+
+#fsl needs numpy
+RUN apt install -y vim jq python-numpy
+
+
+WORKDIR /
+
+
