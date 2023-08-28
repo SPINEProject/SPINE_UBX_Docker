@@ -36,7 +36,7 @@ COPY src /src
 # Set the working directory to the downloaded folder
 WORKDIR /app/ADSv1.2
 
-RUN conda create -p /app/ADSv1.2/ADS_ENV python=3.7.7 -y
+RUN conda create -p /app/ADSv1.2/ADS_ENV python=3.6.5 -y
 #RUN . activate /app/ADSv1.2/ADS_ENV
 RUN echo "source activate /app/ADSv1.2/ADS_ENV" > ~/.bashrc
 
@@ -49,13 +49,16 @@ RUN python --version
 # # Install Python dependencies
 # ## RUN pip install --no-cache-dir -r codes/module_list.txt
 # Install Python dependencies
-RUN pip install numpy==1.19.5 nibabel==3.2.1 scipy==1.4.1 scikit-image scikit-learn==1.0.1
+RUN pip install numpy==1.19.5 nibabel==3.2.1 scipy==1.4.1 scikit-image scikit-learn==0.24.1
 RUN pip install pandas shap ipython
 RUN pip install h5py==2.10.0
 RUN pip install dipy==1.4.0
-RUN pip install tensorflow==2.11.0
+RUN pip install tensorflow==2.1.0  
 RUN pip install fury==0.7.0
 RUN pip install xlrd==1.2.0 openpyxl
+#2.6.2
+# ads repo mentions tensorflow 2.0.0 but might not be compatible with python version installed
+#RUN pip install --upgrade tensorflow
 
 #   #might be used :  pip install tensorflow-gpu==2.0.0 \
 
