@@ -68,9 +68,9 @@ def move_inputs(dwi_path, b0_path, adc_path):
     shutil.copy(adc_path, Path(SUBJECT_DIR,"Subject_ADC.nii.gz"))
 
 def main(args):
-    # move_inputs(args.dwi, args.b0, args.adc)
-    # create_conf_file(args)
-    # run_ADS_v1_2()
+    move_inputs(args.dwi, args.b0, args.adc)
+    create_conf_file(args)
+    run_ADS_v1_2()
     move_outputs()
 
 if __name__ == "__main__":
