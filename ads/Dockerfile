@@ -29,8 +29,9 @@ ENV PATH /opt/conda/bin:$PATH
 
 # cOPY FOLDER manually Downloaded from NITRC
 COPY ADSv1.2 /app/ADSv1.2
-COPY isHD5Valid.py /app/ADSv1.2/codes/
-COPY loadModel.py /app/ADSv1.2/codes/
+COPY src/isHD5Valid.py /app/ADSv1.2/codes/
+COPY src/loadModel.py /app/ADSv1.2/codes/
+COPY src /src
 
 # Set the working directory to the downloaded folder
 WORKDIR /app/ADSv1.2
@@ -52,9 +53,9 @@ RUN pip install numpy==1.19.5 nibabel==3.2.1 scipy==1.4.1 scikit-image scikit-le
 RUN pip install pandas shap ipython
 RUN pip install h5py==2.10.0
 RUN pip install dipy==1.4.0
-RUN pip install tensorflow==2.0.0  
+RUN pip install tensorflow==2.1.0  
 RUN pip install fury==0.7.0
-RUN pip install xlrd==1.2.0
+RUN pip install xlrd==1.2.0 openpyxl
 #2.6.2
 # ads repo mentions tensorflow 2.0.0 but might not be compatible with python version installed
 #RUN pip install --upgrade tensorflow
